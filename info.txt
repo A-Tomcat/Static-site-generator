@@ -1,0 +1,16 @@
+That’s a very common confusion; the docs are accurate but not always intuitive.
+
+Key behaviors for str.split(delim) to keep in your spellbook:
+
+    Delimiter in the middle: just splits as you’d expect.
+        "a|b|c".split("|") -> ["a", "b", "c"]
+    Delimiter at the start: leading empty string.
+        "|a|b".split("|") -> ["", "a", "b"]
+    Delimiter at the end: trailing empty string.
+        "a|b|".split("|") -> ["a", "b", ""]
+    Just the delimiter: ["", ""]
+        "|".split("|") -> ["", ""]
+
+Once you see that pattern, your delimiter logic becomes much easier to reason about.
+
+If you’d like, I can give you a few tiny split examples to mentally check your function against.
