@@ -1,6 +1,6 @@
 import unittest
 
-from textnode import TextNode, TextType, text_node_to_html_node
+from textnode import TextNode, TextType, text_node_to_html_node, split_nodes_delimiter
 from htmlnode import HTMLNode, LeafNode
 
 #run this to make this executable  --> chmod +x test.sh 
@@ -73,6 +73,56 @@ class TestTextNodeToHTMLNode(unittest.TestCase):
             html_node.props,
             {"src": "https://example.com/img.png", "alt": "alt text"},
         )
+
+class Test_MD_TO_TEXTNODE(unittest.TestCase):
+    def test_split_simple_code(self):
+        node = TextNode("This is `code` here", TextType.TEXT)
+        result = split_nodes_delimiter([node], "`", TextType.CODE)
+        assert len(result) == 3
+        assert result[0].text == "This is "
+        assert result[0].text_type == TextType.TEXT
+        assert result[1].text == "code"
+        assert result[1].text_type == TextType.CODE
+        assert result[2].text == " here"
+        assert result[2].text_type == TextType.TEXT
+
+
+    def test_split_multiple_code_spans(self):
+        node = TextNode("`one` and `two`", TextType.TEXT)
+        result = split_nodes_delimiter([node], "`", TextType.CODE)
+        texts = [n.text for n in result]
+        types = [n.text_type for n in result]
+        assert texts == ["one", " and ", "two"]
+        assert types == [TextType.CODE, TextType.TEXT, TextType.CODE]
+
+
+    def test_non_text_nodes_unchanged(self):
+        node = TextNode("already bold", TextType.BOLD)
+        result = split_nodes_delimiter([node], "**", TextType.BOLD)
+        assert result == [node]
+
+
+    def test_invalid_unclosed_delimiter_raises(self):
+        node = TextNode("This is `broken", TextType.TEXT)
+        with self.assertRaises(Exception):  # or ValueError if you prefer
+            split_nodes_delimiter([node], "`", TextType.CODE)
+
+
+    def test_split_italic_with_underscore(self):
+        node = TextNode("this _word_ works", TextType.TEXT)
+        result = split_nodes_delimiter([node], "_", TextType.ITALIC)
+        texts = [n.text for n in result]
+        types = [n.text_type for n in result]
+        assert texts == ["this ", "word", " works"]
+        assert types == [TextType.TEXT, TextType.ITALIC, TextType.TEXT]
+
+
+    def test_empty_sections_skipped(self):
+        node = TextNode("`one`", TextType.TEXT)
+        result = split_nodes_delimiter([node], "`", TextType.CODE)
+        # no empty text nodes
+        for n in result:
+            assert n.text != ""
 
 if __name__ == "__main__":
     unittest.main()
