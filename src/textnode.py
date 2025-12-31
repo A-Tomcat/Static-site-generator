@@ -11,9 +11,9 @@ class TextType(Enum):
     IMAGE = "IMAGE"
 
 class TextNode:
-    def __init__(self, text, TextType, url = None):
+    def __init__(self, text, Text_Type, url = None):
         self.text = text
-        self.text_type = TextType
+        self.text_type = Text_Type
         self.url = url
     def __eq__(self, other):
         A = self.text == other.text
@@ -46,3 +46,14 @@ def text_node_to_html_node(text_node):
 
         case _:
             raise Exception(f"TextType not valid!")
+
+
+def split_nodes_delimiter(old_nodes, delimiter, text_type):
+    new_nodes = []
+    for node in old_nodes:
+        if node is not TextType.TEXT:
+            new_nodes.append(node)
+            continue
+        match delimiter:
+            case "**":
+                pass

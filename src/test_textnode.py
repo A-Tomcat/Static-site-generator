@@ -14,7 +14,7 @@ class TestTextNode(unittest.TestCase):
         node2 = TextNode("This is a text node", TextType.BOLD)
         self.assertEqual(node, node2)
 
-    def test_islink(self):
+    def test_is_link(self):
         node = TextNode("This is a link node", TextType.LINK)
         self.assertEqual(node.text_type.value, "LINK")
 
@@ -23,6 +23,31 @@ class TestTextNode(unittest.TestCase):
         html_node = text_node_to_html_node(node)
         self.assertEqual(html_node.tag, None)
         self.assertEqual(html_node.value, "This is a text node")
+    
+    def test_not_equal_different_type(self):
+        node1 = TextNode("same text", TextType.TEXT)
+        node2 = TextNode("same text", TextType.BOLD)
+        self.assertNotEqual(node1, node2)
+
+    def test_not_equal_different_text(self):
+        node1 = TextNode("some text", TextType.TEXT)
+        node2 = TextNode("other text", TextType.TEXT)
+        self.assertNotEqual(node1, node2)
+
+    def test_equal_with_url(self):
+        node1 = TextNode("link text", TextType.LINK, "https://boot.dev")
+        node2 = TextNode("link text", TextType.LINK, "https://boot.dev")
+        self.assertEqual(node1, node2)
+
+    def test_not_equal_different_url(self):
+        node1 = TextNode("link text", TextType.LINK, "https://boot.dev")
+        node2 = TextNode("link text", TextType.LINK, "https://example.com")
+        self.assertNotEqual(node1, node2)
+
+    def test_repr(self):
+        node = TextNode("repr text", TextType.TEXT, "https://boot.dev")
+        self.assertEqual("TextNode(repr text, TEXT, https://boot.dev)", repr(node),
+    )
         
 class TestTextNodeToHTMLNode(unittest.TestCase):
     def test_text(self):
