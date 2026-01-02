@@ -3,7 +3,7 @@ import unittest
 from textnode import TextNode, TextType, text_node_to_html_node, split_nodes_delimiter
 from htmlnode import HTMLNode, LeafNode
 from split_nodes import split_nodes_link, split_nodes_image
-from text_to_textnode import text_to_textnode
+from text_to_textnode import text_to_textnode, markdown_to_blocks
 
 #run this to make this executable  --> chmod +x test.sh 
 #should be in test.sh already
@@ -47,7 +47,7 @@ class TestTextNode(unittest.TestCase):
 
     def test_repr(self):
         node = TextNode("repr text", TextType.TEXT, "https://boot.dev")
-        self.assertEqual("TextNode(repr text, TEXT, https://boot.dev)", repr(node),
+        self.assertEqual("TextNode('repr text', TEXT, 'https://boot.dev')", repr(node),
     )
         
 class TestTextNodeToHTMLNode(unittest.TestCase):
@@ -146,12 +146,69 @@ class Test_Split_Nodes(unittest.TestCase):
 
 
 class Test_Text_To_Textnode(unittest.TestCase):
+    # def test_assignment_input(self):
+    #     node = TextNode("This is **text** with an _italic_ word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)", TextType.TEXT)
+    #     result_nodes = text_to_textnode(node.text)
+    #     self.assertEqual(result_nodes[0], TextNode("This is ", TextType.TEXT))
+    # pass
     def test_assignment_input(self):
-        node = TextNode("This is **text** with an _italic_ word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)", TextType.TEXT)
-        result_nodes = text_to_textnode(node.text)
+        text = (
+            "This is **text** with an _italic_ word and a `code block` and an "
+            "![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a "
+            "[link](https://boot.dev)"
+        )
+        result_nodes = text_to_textnode(text)
+
+        self.assertEqual(len(result_nodes), 10)
+
         self.assertEqual(result_nodes[0], TextNode("This is ", TextType.TEXT))
-    pass
+        self.assertEqual(result_nodes[1], TextNode("text", TextType.BOLD))
+        self.assertEqual(result_nodes[2], TextNode(" with an ", TextType.TEXT))
+        self.assertEqual(result_nodes[3], TextNode("italic", TextType.ITALIC))
+        self.assertEqual(result_nodes[4], TextNode(" word and a ", TextType.TEXT))
+        self.assertEqual(result_nodes[5], TextNode("code block", TextType.CODE))
+        self.assertEqual(result_nodes[6], TextNode(" and an ", TextType.TEXT))
+        self.assertEqual(
+            result_nodes[7],
+            TextNode(
+                "obi wan image",
+                TextType.IMAGE,
+                "https://i.imgur.com/fJRm4Vk.jpeg",
+            ),
+        )
+        self.assertEqual(result_nodes[8], TextNode(" and a ", TextType.TEXT))
+        self.assertEqual(
+            result_nodes[9],
+            TextNode("link", TextType.LINK, "https://boot.dev"),
+        )
 
+    def test_only_bold(self):
+        result = text_to_textnode("**bold**")
+        self.assertEqual(result, [TextNode("bold", TextType.BOLD)])
 
+    def test_plain_text(self):
+        result = text_to_textnode("just plain")
+        self.assertEqual(result, [TextNode("just plain", TextType.TEXT)])
+
+    def test_markdown_to_blocks(self):
+        md = """
+This is **bolded** paragraph
+
+This is another paragraph with _italic_ text and `code` here
+This is the same paragraph on a new line
+
+- This is a list
+- with items\n
+"""
+        blocks = markdown_to_blocks(md)
+        self.assertEqual(
+            blocks,
+            [
+"This is **bolded** paragraph",
+"This is another paragraph with _italic_ text and `code` here\nThis is the same paragraph on a new line",
+"- This is a list\n- with items",
+            ],
+        )
+        
 if __name__ == "__main__":
     unittest.main()

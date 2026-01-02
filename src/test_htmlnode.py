@@ -1,12 +1,11 @@
 import unittest
 
-from htmlnode import HTMLNode, LeafNode, ParentNode
+from htmlnode import HTMLNode, LeafNode, ParentNode 
 #run this to make this executable  --> chmod +x test.sh 
 #should be in test.sh already
 
 class Test_HTMLNode(unittest.TestCase):
     def test_no_input(self):
-        print("Testing __init__ with no input:")
         node = HTMLNode()
         a = False
         if node.children == None:
@@ -14,11 +13,9 @@ class Test_HTMLNode(unittest.TestCase):
                 if node.tag == None:
                     if node. value == None:
                         a = True
-        print(f"All 4 data members are None: {a}")
         self.assertEqual(a, True)
     
     def test_leaf_to_html_p(self):
-        print('''Testing LeafNode: "p", "Hello, world!"''')
         node = LeafNode("p", "Hello, world!")
         self.assertEqual(node.to_html(), "<p>Hello, world!</p>")
 
