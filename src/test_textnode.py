@@ -3,6 +3,7 @@ import unittest
 from textnode import TextNode, TextType, text_node_to_html_node, split_nodes_delimiter
 from htmlnode import HTMLNode, LeafNode
 from split_nodes import split_nodes_link, split_nodes_image
+from text_to_textnode import text_to_textnode
 
 #run this to make this executable  --> chmod +x test.sh 
 #should be in test.sh already
@@ -144,7 +145,13 @@ class Test_Split_Nodes(unittest.TestCase):
         )
 
 
-
+class Test_Text_To_Textnode(unittest.TestCase):
+    def test_assignment_input(self):
+        node = TextNode("This is **text** with an _italic_ word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)", TextType.TEXT)
+        result_nodes = text_to_textnode(node.text)
+        self.assertEqual(result_nodes[0], TextNode("This is ", TextType.TEXT))
     pass
+
+
 if __name__ == "__main__":
     unittest.main()

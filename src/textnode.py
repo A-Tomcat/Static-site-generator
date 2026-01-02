@@ -22,7 +22,7 @@ class TextNode:
         return A and B and C
         
     def __repr__(self):
-        return f"TextNode({self.text}, {self.text_type.value}, {self.url})"
+        return f"TextNode({self.text!r}, {self.text_type.value}, {self.url!r})"
     
 def text_node_to_html_node(text_node):
     match text_node.text_type:
