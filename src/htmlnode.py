@@ -55,29 +55,3 @@ class ParentNode(HTMLNode):
             html += child.to_html()
         html = f'''<{self.tag}{self.props_to_html()}>{html}</{self.tag}>'''
         return html
-    
-
-def text_node_to_html_node(text_node):
-    match text_node.TextType:
-        case "TEXT":
-            pass
-
-        case "BOLD":
-            pass
-    
-        case "ITALIC":
-            pass
-            
-        case "CODE":
-            pass
-
-        case "LINK":
-            pass
-
-        case "IMAGE":
-            pass
-
-        case _:
-            raise Exception(f"TextType not valid!")
-
-    pass
