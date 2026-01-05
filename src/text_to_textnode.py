@@ -3,12 +3,12 @@ from textnode import TextNode, TextType, BlockType, split_nodes_delimiter
 from split_nodes import split_nodes_image, split_nodes_link
 
 def text_to_textnode(text):
-    node_images = split_nodes_image([TextNode(text, TextType.TEXT)])
-    node_links = split_nodes_link(node_images)
-    node_code = split_nodes_delimiter(node_links, "`", TextType.CODE)
-    node_bold = split_nodes_delimiter(node_code, "**", TextType.BOLD)
-    node_result = split_nodes_delimiter(node_bold, "_", TextType.ITALIC)
-    return node_result
+    node = split_nodes_image([TextNode(text, TextType.TEXT)])
+    node = split_nodes_link(node)
+    node = split_nodes_delimiter(node, "`", TextType.CODE)
+    node = split_nodes_delimiter(node, "**", TextType.BOLD)
+    node = split_nodes_delimiter(node, "_", TextType.ITALIC)
+    return node
 
 def markdown_to_blocks(markdown):
     blocks = markdown.split("\n\n")
@@ -43,7 +43,7 @@ def block_to_block_type(block):
                 counter += 1
             else:
                 break
-        if 1 <= counter <= 6 and len(block > counter and block[counter] == " "):
+        if 1 <= counter <= 6 and len(block) > counter and block[counter] == " ":
             return BlockType.HEADING
         
 

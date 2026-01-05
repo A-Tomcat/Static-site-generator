@@ -1,6 +1,7 @@
 from textnode import TextNode, TextType
 from text_to_textnode import text_to_textnode
 from copystatic import move_content
+from generate_page import generate_page
 
 
 def main():
@@ -11,6 +12,7 @@ def main():
     # text_part = node2.text.split("**")
     # print(text_part)
     move_content()
-
+    generate_page()
+    
 
 main()

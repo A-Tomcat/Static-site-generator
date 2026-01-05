@@ -14,3 +14,56 @@ Key behaviors for str.split(delim) to keep in your spellbook:
 Once you see that pattern, your delimiter logic becomes much easier to reason about.
 
 If you’d like, I can give you a few tiny split examples to mentally check your function against.
+
+
+# src/main.py
+import os
+from copystatic import move_content
+from markdown_blocks import markdown_to_blocks        # example name
+from inline_markdown import text_to_textnodes       # example name
+from htmlnode import nodes_to_html, write_html      # example names
+
+CONTENT_DIR = "content"     # where your .md lives
+PUBLIC_DIR = "public"       # output site
+TEMPLATE_PATH = "template.html"  # html template if you have one
+
+
+def generate_page(markdown_path, html_out_path):
+    # 1. Read markdown file
+    with open(markdown_path, "r") as f:
+        markdown = f.read()
+
+    # 2. Transform markdown → HTML (via your pipeline)
+    #    a) split into blocks
+    blocks = markdown_to_blocks(markdown)
+
+    #    b) for each block, produce TextNodes / HTMLNodes...
+    #       (details depend on how your lessons structure it)
+    html_root = nodes_to_html(blocks)
+
+    # 3. Optionally inject into template and write to output
+    write_html(html_root, html_out_path, TEMPLATE_PATH)
+
+
+def generate_site():
+    # 1. Copy static assets
+    move_content("static", PUBLIC_DIR)
+
+    # 2. Walk content directory and generate pages
+    for filename in os.listdir(CONTENT_DIR):
+        if not filename.endswith(".md"):
+            continue
+
+        markdown_path = os.path.join(CONTENT_DIR, filename)
+        name, _ = os.path.splitext(filename)
+        html_out_path = os.path.join(PUBLIC_DIR, f"{name}.html")
+
+        generate_page(markdown_path, html_out_path)
+
+
+def main():
+    generate_site()
+
+
+if __name__ == "__main__":
+    main()
