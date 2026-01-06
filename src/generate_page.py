@@ -8,7 +8,7 @@ def extract_title(markdown):
             return line[2:].strip()
     raise ValueError(f"No h1 Header in Markdown Text!")
 
-def generate_page(from_path = "content/index.md", template_path = "template.html", dest_path = "public/index.html"):
+def generate_page(from_path = "content/index.md", template_path = "template.html", dest_path = "public/index.html", basepath = "/"):
     print(f"Generating page from {from_path} to {dest_path} using {template_path}.")
     from_content = ""
     template_content = ""
@@ -20,7 +20,10 @@ def generate_page(from_path = "content/index.md", template_path = "template.html
     from_html = markdown_to_html_node(from_content).to_html()
     
     template_content = template_content.replace(r"{{ Title }}", title_to_be)
-    template_content = template_content.replace(r"{{ Content }}", from_html)
+    template_content = template_content.replace(r"{{ Content }}", from_html)    
+    if basepath != "/":
+        template_content = template_content.replace('href="/', f'href="{basepath}')
+        template_content = template_content.replace('src="/', f'src={basepath}')
 
     dest_dir = os.path.dirname(dest_path)
     if dest_dir != "":
@@ -30,7 +33,11 @@ def generate_page(from_path = "content/index.md", template_path = "template.html
         page.write(template_content)
 
     
-def generate_pages_recursive(dir_path_content = "content", template_path = "template.html", dest_dir_path = "public"):
+def generate_pages_recursive(dir_path_content = "content", template_path = "template.html", dest_dir_path = "public", basepath = "/"):
+    if basepath != "/":
+        dir_path_content = os.path.join(basepath, dir_path_content)
+        template_path = os.path.join(basepath, template_path)
+        dir_path_content = os.path.join(basepath, dir_path_content)
     for item in os.listdir(dir_path_content):
         path = os.path.join(dir_path_content, item)
         if os.path.isfile(path):
