@@ -2,7 +2,7 @@
 import os
 import shutil
 
-def move_content(source_dir = "static", destination_dir = "public"):
+def move_content(source_dir = "static", destination_dir = "docs"):
     source_path = os.path.abspath(source_dir)
     destination_path = os.path.abspath(destination_dir)
     if not os.path.exists(source_path):

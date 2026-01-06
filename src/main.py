@@ -7,11 +7,12 @@ import sys
 
 
 def main():
+    output_dir = "docs"
     basepath = "/"
     if len(sys.argv) > 1:
         basepath = sys.argv[1]
-    move_content()
-    generate_pages_recursive("content", "template.html", "docs", basepath)
+    move_content("static", output_dir)
+    generate_pages_recursive("content", "template.html", output_dir, basepath)
     
 
 main()

@@ -1,4 +1,4 @@
-That’s a very common confusion; the docs are accurate but not always intuitive.
+'''That’s a very common confusion; the docs are accurate but not always intuitive.
 
 Key behaviors for str.split(delim) to keep in your spellbook:
 
@@ -67,3 +67,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+'''
