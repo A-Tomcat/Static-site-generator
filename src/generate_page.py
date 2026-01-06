@@ -23,7 +23,7 @@ def generate_page(from_path = "content/index.md", template_path = "template.html
     template_content = template_content.replace(r"{{ Content }}", from_html)    
     if basepath != "/":
         template_content = template_content.replace('href="/', f'href="{basepath}')
-        template_content = template_content.replace('src="/', f'src={basepath}')
+        template_content = template_content.replace('src="/', f'src"={basepath}')
 
     dest_dir = os.path.dirname(dest_path)
     if dest_dir != "":
