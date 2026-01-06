@@ -1,3 +1,5 @@
+#generate_page.py
+
 from markdown_to_html_node import markdown_to_html_node
 import re, os
 
@@ -34,15 +36,11 @@ def generate_page(from_path = "content/index.md", template_path = "template.html
 
     
 def generate_pages_recursive(dir_path_content = "content", template_path = "template.html", dest_dir_path = "public", basepath = "/"):
-    if basepath != "/":
-        dir_path_content = os.path.join(basepath, dir_path_content)
-        template_path = os.path.join(basepath, template_path)
-        dir_path_content = os.path.join(basepath, dir_path_content)
     for item in os.listdir(dir_path_content):
         path = os.path.join(dir_path_content, item)
         if os.path.isfile(path):
             file_name, _ = os.path.splitext(item)
             file_html = file_name + ".html"
-            generate_page(path, template_path, os.path.join(dest_dir_path, file_html))
+            generate_page(path, template_path, os.path.join(dest_dir_path, file_html), basepath)
         elif os.path.isdir(path):
-            generate_pages_recursive(path, template_path, os.path.join(dest_dir_path, item))
+            generate_pages_recursive(path, template_path, os.path.join(dest_dir_path, item), basepath)
