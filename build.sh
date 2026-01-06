@@ -1,1 +1,1 @@
-python3 src/main.py "/https://github.com/A-Tomcat/Static-site-generator/"
+python3 src/main.py "/https://a-tomcat.github.io/Static-site-generator/"
